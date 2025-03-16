@@ -33,6 +33,44 @@ let score = 0;
 let gameOver = false;
 let gameWin = false;
 
+// JOYSTICK SETUP
+let joystickContainer = document.getElementById('joystickContainer');
+let joystick = document.getElementById('joystick');
+let dragging = false;
+let startX = 0, startY = 0;
+let joystickDx = 0, joystickDy = 0;
+
+joystickContainer.addEventListener('touchstart', function (e) {
+    dragging = true;
+    const touch = e.targetTouches[0];
+    const rect = joystickContainer.getBoundingClientRect();
+    startX = rect.left + rect.width / 2;
+    startY = rect.top + rect.height / 2;
+}, false);
+
+joystickContainer.addEventListener('touchmove', function (e) {
+    if (!dragging) return;
+    e.preventDefault();
+
+    const touch = e.targetTouches[0];
+    let dx = touch.clientX - startX;
+    let dy = touch.clientY - startY;
+    const distance = Math.min(Math.sqrt(dx * dx + dy * dy), 60);
+
+    const angle = Math.atan2(dy, dx);
+    joystickDx = Math.cos(angle) * distance / 60;
+    joystickDy = Math.sin(angle) * distance / 60;
+
+    joystick.style.transform = `translate(${joystickDx * 60}px, ${joystickDy * 60}px)`;
+}, false);
+
+joystickContainer.addEventListener('touchend', function () {
+    dragging = false;
+    joystickDx = 0;
+    joystickDy = 0;
+    joystick.style.transform = `translate(0, 0)`;
+}, false);
+
 // Spawn Functions
 function spawnEnemy() {
     let x, y;
@@ -86,7 +124,7 @@ function shootBullet(direction) {
     }
 }
 
-// Control
+// Control clavier
 let keys = {};
 window.addEventListener("keydown", (e) => {
     keys[e.key] = true;
@@ -102,13 +140,25 @@ function update() {
     if (gameOver || gameWin) return;
 
     let dx = 0, dy = 0;
-    if (keys["z"]) dy -= player.speed;
-    if (keys["s"]) dy += player.speed;
-    if (keys["q"]) dx -= player.speed;
-    if (keys["d"]) dx += player.speed;
 
-    player.x += dx;
-    player.y += dy;
+    // Mouvement clavier
+    if (keys["z"]) dy -= 1;
+    if (keys["s"]) dy += 1;
+    if (keys["q"]) dx -= 1;
+    if (keys["d"]) dx += 1;
+
+    // Mouvement joystick
+    dx += joystickDx;
+    dy += joystickDy;
+
+    const length = Math.hypot(dx, dy);
+    if (length > 0) {
+        dx /= length;
+        dy /= length;
+    }
+
+    player.x += dx * player.speed;
+    player.y += dy * player.speed;
 
     player.x = Math.max(0, Math.min(canvas.width - player.width, player.x));
     player.y = Math.max(0, Math.min(canvas.height - player.height, player.y));
@@ -179,8 +229,7 @@ function update() {
     goldenApples.forEach((gApple, index) => {
         if (player.x < gApple.x + gApple.width &&
             player.x + player.width > gApple.x &&
-            player.y < gApple.y + gApple.height &&
-            player.y + player.height > gApple.y) {
+            player.y < gApple.y + gApple.height) {
 
             goldenApples.splice(index, 1);
             player.hp += 10;
@@ -195,7 +244,6 @@ function update() {
         }
     }
 
-    // Win condition
     if (score >= 1000) {
         gameWin = true;
     }
