@@ -24,26 +24,26 @@ button {
     cursor: pointer;
 }
 
-/* ===== JOYSTICK ===== */
-#joystickContainer {
+/* Joystick Styles */
+#joystick-container {
     position: fixed;
-    bottom: 50px;
-    left: 50px;
-    width: 150px;
-    height: 150px;
-    background: rgba(255, 255, 255, 0.1);
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 120px;
+    background: rgba(255, 255, 255, 0.2);
     border-radius: 50%;
-    touch-action: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
 }
 
 #joystick {
-    position: absolute;
-    width: 80px;
-    height: 80px;
-    background: rgba(255, 255, 255, 0.5);
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.7);
     border-radius: 50%;
-    top: 35px;
-    left: 35px;
-    transform: translate(0, 0);
-    touch-action: none;
+    position: relative;
 }
