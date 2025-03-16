@@ -1,6 +1,8 @@
 body {
     margin: 0;
     background-color: #111;
+    font-family: Arial, sans-serif;
+    color: white;
 }
 
 canvas {
@@ -8,4 +10,40 @@ canvas {
     margin: 20px auto;
     border: 2px solid #fff;
     background-color: #222;
+}
+
+.menu {
+    text-align: center;
+    margin-top: 100px;
+}
+
+button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* ===== JOYSTICK ===== */
+#joystickContainer {
+    position: fixed;
+    bottom: 50px;
+    left: 50px;
+    width: 150px;
+    height: 150px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    touch-action: none;
+}
+
+#joystick {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    top: 35px;
+    left: 35px;
+    transform: translate(0, 0);
+    touch-action: none;
 }
